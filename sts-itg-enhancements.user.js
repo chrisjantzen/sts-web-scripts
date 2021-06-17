@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         STS IT Glue Enhancements
 // @namespace    https://seatosky.itglue.com/
-// @version      1.1.0
+// @version      1.1.1
 // @description  Enhancements for IT Glue - specific to Sea to Sky
 // @author       Chris Jantzen
 // @match        https://seatosky.itglue.com/*
@@ -27,7 +27,7 @@
                     break;
                 // Edit
                 case 'e':
-                    var editBtn = $(".sidebar .sidebar-buttons-section a[href$='/edit']");
+                    var editBtn = $(".sidebar .item-buttons a[href$='/edit']");
                     if (editBtn.length) {
                         event.preventDefault();
                         // [0] gets the native dom element, for some reason jquery can't click on this button
