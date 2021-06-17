@@ -1,0 +1,93 @@
+/* ==UserStyle==
+@name           IT Glue Improvements - Sea to Sky
+@namespace      https://seatosky.itglue.com/
+@version        1.0.0
+@description    Style modifications that make it easier to navigate IT Glue.
+@author         Chris Jantzen
+@license        MPL-2.0
+@preprocessor   default
+==/UserStyle== */
+
+@-moz-document domain("seatosky.itglue.com") {
+    /** Make textareas resizeable **/
+    textarea {
+        resize: both;
+    }
+
+    /*******************/
+    /*** Asset Pages ***/
+    /*******************/
+    .row-header {
+        padding-top: 15px;
+        border-bottom: 1px solid #56878f;
+        border-bottom: 1px solid rgba(86, 135, 143, 0.6);
+        font-weight: 400;
+        font-size: 1.8em;
+    }
+
+    .simple_form .row-header {
+        padding-top: 30px;
+    }
+
+    /* Requires JS to add .important classes */
+    .important {
+        background-color: #fffeea;
+        border: 1px solid #ffe8a6;
+        border-radius: 5px;
+        padding: 0.8em;
+    }
+
+    /* Site Summary Page > Quick Links > Account Management section (added by JS script) */
+    .sidebar-copy-quick-links {
+        float: right;
+        margin-right: 20%;
+    }
+
+    .sidebar-copy-quick-links ul {
+        list-style: none;
+    }
+
+    .sidebar-copy-quick-links .sidebar-header {
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+
+    .sidebar-copy-quick-links .sidebar-header:not(:first-child) {
+        margin-top: 12px;
+    }
+
+    .sidebar-copy-quick-links li {
+        display: block;
+        margin-top: 1px;
+    }
+
+    .sidebar-copy-quick-links li a {
+        font-size: 13px;
+        padding-left: 5px;
+        line-height: 20px;
+    }
+
+    .sidebar-copy-quick-links li a .fa {
+        margin-top: 2px;
+        margin-right: 5px;
+        font-size: 115%;
+    }
+
+
+    /*******************/
+    /** Asset Sorting **/
+    /*******************/
+    .react-table .option-button.bulk-actions-button .caret-down-icon {
+        color: var(--header-text-color);
+    }
+    .react-table .option-button.bulk-actions-button > div {
+        border: none;
+    }
+
+    /**********************/
+    /** Hide Kaseya Logo **/
+    /**********************/
+    a.it-complete-launcher.qa-it-complete-launcher {
+        display: none;
+    }
+}
