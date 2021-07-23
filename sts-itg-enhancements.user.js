@@ -160,6 +160,17 @@
             }
             window.interval_tries = window.interval_tries + 1;
         }, 1000);
+
+        /////////////////////////////
+        // On React load
+        ////////////////////////////
+        waitForElementToDisplay("#react-main > div",function(){
+            var react = window.ReactMainApp;
+
+            // Add class to STS Only passwords folder
+            $('a.name-link:contains("STS Only")').addClass('sts-only-passwords');
+
+        },500,9000);
     });
 
     /////////////////////////////
@@ -172,5 +183,23 @@
         var editBtn = $(row).find(".column-resource-access > div > a");
         window.open($(editBtn).attr('href'), '_blank');
     });
+
+    function waitForElementToDisplay(selector, callback, checkFrequencyInMs, timeoutInMs) {
+        var startTimeInMs = Date.now();
+        (function loopSearch() {
+            if (document.querySelector(selector) != null) {
+                callback();
+                return;
+            }
+            else {
+                setTimeout(function () {
+                    if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) {
+                        return;
+                    }
+                    loopSearch();
+                }, checkFrequencyInMs);
+            }
+        })();
+    }
 
 })();
