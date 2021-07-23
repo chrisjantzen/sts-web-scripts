@@ -60,10 +60,6 @@
         var importantDiv = $(importantLabel).parent('div.important');
         $(importantDD).appendTo(importantDiv);
 
-        // Add the mass edit button (TODO: Fix. needs to wait for react to laod)
-        $(".react-table.has-bulk-actions .buttons-container").prepend('<a href="#" onclick="massEdit(); return false;" class="react-button autowidth pad7-12 react-new-button"><i class="fa fa-fw fa-pencil"></i>Mass Edit</a>');
-
-
         // If this is a Site Summary page
         if ($("div.has-h1-header.page-header-area > div.page-header > div.sub-heading:contains('Site Summary')").length > 0) {
 
@@ -129,9 +125,24 @@
             });
         }
 
-        // Add quick link to summary page for all organization links, try every 1 second until complete
-        window.interval_tries = 0;
-        var orgLinksInterval = window.setInterval(function(){
+        /////////////////////////////
+        // On React load
+        ////////////////////////////
+        waitForElementToDisplay("#react-main > div",function(){
+            var react = window.ReactMainApp;
+
+            // Add class to STS Only passwords folder
+            $('a.name-link:contains("STS Only")').addClass('sts-only-passwords');
+
+            // Add the mass edit button
+            waitForElementToDisplay(".react-table.has-bulk-actions .buttons-container", function() {
+                $(".react-table.has-bulk-actions .buttons-container").prepend('<a href="#" id="mass-edit" class="react-button autowidth pad7-12 react-new-button"><i class="fa fa-fw fa-pencil"></i>Mass Edit</a>');
+                $(document).on('click', '#mass-edit', function() {
+                    massEdit();
+                });
+            },500,9000);
+
+            // Add quick link to summary page for all organization links
             var organizationLinks = $('a:not(.has-summary-link):not(.menu-item-link)').filter(function() {
                 return this.href.match(/\.com\/\d{7,}$/);
             });
@@ -154,21 +165,6 @@
                 elem.after(summaryLink[0]);
             });
             organizationLinks.addClass('has-summary-link');
-            if (window.interval_tries > 9) {
-                // stop trying after 10 seconds
-                clearInterval(orgLinksInterval);
-            }
-            window.interval_tries = window.interval_tries + 1;
-        }, 1000);
-
-        /////////////////////////////
-        // On React load
-        ////////////////////////////
-        waitForElementToDisplay("#react-main > div",function(){
-            var react = window.ReactMainApp;
-
-            // Add class to STS Only passwords folder
-            $('a.name-link:contains("STS Only")').addClass('sts-only-passwords');
 
         },500,9000);
     });
@@ -178,12 +174,15 @@
     ////////////////////////////
 
     // Mass Edit
-    $(".react-table.has-bulk-actions .react-table-body tbody td.column-select-row input[type=checkbox]:checked").each(function() {
-        var row = $(this).closest("tr")[0];
-        var editBtn = $(row).find(".column-resource-access > div > a");
-        window.open($(editBtn).attr('href'), '_blank');
-    });
+    function massEdit() {
+        $(".react-table.has-bulk-actions .react-table-body tbody td.column-select-row input[type=checkbox]:checked").each(function() {
+            var row = $(this).closest("tr")[0];
+            var editBtn = $(row).find(".column-resource-access > div > a");
+            window.open($(editBtn).attr('href'), '_blank');
+        });
+    }
 
+    // Wait for element load (for watching for react div to load or other divs)
     function waitForElementToDisplay(selector, callback, checkFrequencyInMs, timeoutInMs) {
         var startTimeInMs = Date.now();
         (function loopSearch() {
