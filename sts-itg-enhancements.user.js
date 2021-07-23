@@ -125,21 +125,29 @@
             });
         }
 
+        // Hide embedded passwords "Add Password" option
+        if (window.location.href.indexOf("/configurations/") == -1) {
+            $("div#embedded_passwords #add_password").hide();
+        }
+
         /////////////////////////////
         // On React load
         ////////////////////////////
         waitForElementToDisplay("#react-main > div",function(){
             var react = window.ReactMainApp;
 
-            // Add class to STS Only passwords folder
-            $('a.name-link:contains("STS Only")').addClass('sts-only-passwords');
+            // Wait for react table to load (for pages with folders)
+            waitForElementToDisplay(".react-table", function() {
 
-            // Add the mass edit button
-            waitForElementToDisplay(".react-table.has-bulk-actions .buttons-container", function() {
+                // Make STS Only folder a star
+                $('a.name-link:contains("STS Only")').closest('tr').find('i.fa.fa-folder').addClass('fa-star').removeClass('fa-folder');
+
+                // Add the mass edit button
                 $(".react-table.has-bulk-actions .buttons-container").prepend('<a href="#" id="mass-edit" class="react-button autowidth pad7-12 react-new-button"><i class="fa fa-fw fa-pencil"></i>Mass Edit</a>');
                 $(document).on('click', '#mass-edit', function() {
                     massEdit();
                 });
+
             },500,9000);
 
             // Add quick link to summary page for all organization links
