@@ -5,11 +5,11 @@ These web scripts provide custom modifications to IT Glue. One script is for Tam
 ### IT Glue GUI Modifications
 The css file includes stylesheet modifications that make it easier to navigate IT Glue. This is a WIP and more css edits will be added as time goes on. This code currently mainly targets assets and editing assets to better improve the separation between categories. It also allows you to resize textarea elements across the site and removes the Kaseya logo/link. 
 
-To use this, you will need a browser extension such as Stylus. You can download this here:
+**To use this, you will need a browser extension such as Stylus. You can download this here:**
 * [Google Chrome](https://chrome.google.com/webstore/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne) (also works with Edge Chromium)
 * [Firefox](https://addons.mozilla.org/en-CA/firefox/addon/styl-us/)
 
-To setup:
+**To setup:**
 * After the extension is installed, look for the icon in your browser:
 * 
     ![Stylish Extension](https://user-images.githubusercontent.com/22362786/127243459-3cdad356-f397-491f-bbfa-6d4edb4cb734.png)
@@ -27,17 +27,17 @@ The js file adds some minor functionality enhancements to IT Glue. So far this s
 * Adds mass editing
 * Hides the "Add embedded password" option on pages where we should be using general passwords
 
-To use this, you will need a browser extension such as Tampermonkey or Violetmonkey. In my experience Tampermonkey works better in Chrome, and Violetmonkey works better in Firefox. You can download these here:
+**To use this, you will need a browser extension such as Tampermonkey or Violetmonkey. In my experience Tampermonkey works better in Chrome, and Violetmonkey works better in Firefox. You can download these here:**
 * [Google Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) (also works with Edge Chromium)
 * [Firefox](https://addons.mozilla.org/en-CA/firefox/addon/violentmonkey/)
 
-To setup:
+**To setup:**
 * After the extension is installed, look for the icon in your browser.
     Tampermonkey: ![Tampermonkey](https://user-images.githubusercontent.com/22362786/127243416-a5385b6e-430a-4071-b6d6-71e4092480c3.png)   Violetmonkey: ![Violetmonkey Extension](https://user-images.githubusercontent.com/22362786/127243369-8b5f4ea9-4ebc-493b-8aef-e88e4ad2e6d1.png)
 * Visit this link and simply click the install button: https://github.com/chrisjantzen/sts-web-scripts/raw/main/sts-itg-enhancements.user.js
 * All set! The script will auto-update going forwards. When there is an update, it will prompt you to accept the change.
 
-Usage:
+**Usage:**
 * Save - Ctrl + S  (when editing most assets)
 * Edit - Ctrl + E  (when viewing most assets)
 * New Asset - Ctrl + B  (when viewing a single asset or a list of assets)
