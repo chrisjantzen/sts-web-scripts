@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         STS IT Glue Enhancements
 // @namespace    https://seatosky.itglue.com/
-// @version      1.1.1
+// @version      1.2.0
 // @description  Enhancements for IT Glue - specific to Sea to Sky
 // @author       Chris Jantzen
 // @match        https://seatosky.itglue.com/*
