@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         STS IT Glue Enhancements
 // @namespace    https://seatosky.itglue.com/
-// @version      1.2.0
+// @version      1.3.0
 // @description  Enhancements for IT Glue - specific to Sea to Sky
 // @author       Chris Jantzen
 // @match        https://seatosky.itglue.com/*
@@ -129,53 +129,85 @@
         if (window.location.href.indexOf("/configurations/") == -1) {
             $("div#embedded_passwords #add_password").hide();
         }
+    });
 
-        /////////////////////////////
-        // On React load
-        ////////////////////////////
-        waitForElementToDisplay("#react-main > div",function(){
-            var react = window.ReactMainApp;
+    /////////////////////////////
+    // On React page load
+    ////////////////////////////
+    function reactLoad() {
+        var react = window.ReactMainApp;
 
-            // Wait for react table to load (for pages with folders)
-            waitForElementToDisplay(".react-table", function() {
+        reactTableLoad();
 
-                // Make STS Only folder a star
-                $('a.name-link:contains("STS Only")').closest('tr').find('i.fa.fa-folder').addClass('fa-star').removeClass('fa-folder');
+        // Add quick link to summary page for all organization links
+        var organizationLinks = $('a:not(.has-summary-link):not(.menu-item-link)').filter(function() {
+            return this.href.match(/\.com\/\d{7,}$/);
+        });
 
-                // Add the mass edit button
+        $.each(organizationLinks, function(i, elem) {
+            var oldLink = elem.href;
+            var oldTitle = '';
+            if ($(elem).hasClass('org-icon')) {
+                oldTitle = $(elem).find('.caption').text();
+            } else {
+                oldTitle = $(elem).text();
+            }
+            var newLink = oldLink + "/assets/174982-site-summary/records/";
+            var newTitle = oldTitle + " - Summary";
+            var summaryLink = $(document.createElement("a"));
+            summaryLink.addClass('summary-link');
+            summaryLink.attr('href', newLink);
+            summaryLink.attr('title', newTitle);
+            summaryLink.html("<i style='opacity: 0.5' class='fa fa-fw fa-home'></i>");
+            elem.after(summaryLink[0]);
+        });
+        organizationLinks.addClass('has-summary-link');
+    }
+
+    function reactTableLoad() {
+        // Wait for react table to load (for pages with folders)
+        waitForElementToDisplay(".react-table", async function() {
+            await new Promise(r => setTimeout(r, 200));
+            // Make STS Only folder a star
+            $('a.name-link:contains("STS Only")').closest('tr').find('i.fa.fa-folder').addClass('fa-star').removeClass('fa-folder');
+
+            // Add the mass edit button
+            waitForElementToDisplay(".buttons-container", function() {
                 $(".react-table.has-bulk-actions .buttons-container").prepend('<a href="#" id="mass-edit" class="react-button autowidth pad7-12 react-new-button"><i class="fa fa-fw fa-pencil"></i>Mass Edit</a>');
                 $(document).on('click', '#mass-edit', function() {
                     massEdit();
                 });
-
-            },500,9000);
-
-            // Add quick link to summary page for all organization links
-            var organizationLinks = $('a:not(.has-summary-link):not(.menu-item-link)').filter(function() {
-                return this.href.match(/\.com\/\d{7,}$/);
             });
-
-            $.each(organizationLinks, function(i, elem) {
-                var oldLink = elem.href;
-                var oldTitle = '';
-                if ($(elem).hasClass('org-icon')) {
-                    oldTitle = $(elem).find('.caption').text();
-                } else {
-                    oldTitle = $(elem).text();
-                }
-                var newLink = oldLink + "/assets/174982-site-summary/records/";
-                var newTitle = oldTitle + " - Summary";
-                var summaryLink = $(document.createElement("a"));
-                summaryLink.addClass('summary-link');
-                summaryLink.attr('href', newLink);
-                summaryLink.attr('title', newTitle);
-                summaryLink.html("<i style='opacity: 0.5' class='fa fa-fw fa-home'></i>");
-                elem.after(summaryLink[0]);
-            });
-            organizationLinks.addClass('has-summary-link');
-
         },500,9000);
+    }
+
+    ////////////////////////////
+    // Mutation Observer - Watch for page pathname to change
+    // and then run reactLoad (this seems to be the best way to watch for pages changes in react externally)
+    ////////////////////////////
+    var oldPath = location.pathname;
+    var observer = new MutationObserver(function(mutations) {
+        if(location.pathname != oldPath){
+            // On page change
+            oldPath = location.pathname;
+             waitForElementToDisplay("#react-main > div",function(){
+                 reactLoad()
+             },500,9000);
+        }
     });
+    observer.observe(document, {
+        subtree: true,
+        childList: true,
+        attributes: false
+    });
+
+    ////////////////////////////
+    // On initial load
+    ////////////////////////////
+    waitForElementToDisplay("#react-main > div",function(){
+        reactLoad()
+    },500,9000);
+
 
     /////////////////////////////
     // FUNCTIONS
