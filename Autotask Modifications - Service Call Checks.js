@@ -4,7 +4,7 @@
 // @version      2024-07-05
 // @description  This replaces the scheduled service call checkmarks in Autotask with icons showing whether they are currently happening, scheduled for the future, or if they happened in the past. Also shows if a past one was missed or completed.
 // @author       Chris Jantzen - Sea to Sky
-// @match        https://ww5.autotask.net/*
+// @match        *.autotask.net/*
 // @match        */Mvc/ServiceDesk/MyWorkspaceAndQueuesTickets.mvc/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=autotask.net
 // @grant        GM_xmlhttpRequest
@@ -183,40 +183,31 @@
                         }
 
                         // Update icons for each scheduled service call
-                        var lastIconType = false;
-
                         console.log("Service call:", serviceCall);
                         if (todayDate > serviceCall.startDate && todayDate <= serviceCall.endDate) {
                             // Ongoing
                             console.log("Ongoing");
-                            $j(check).css("background-position", "-119px -17px");
-                            lastIconType = "ongoing";
+                            $j(check).css("background-position", "-294px -63px");
+                            $j(check).css("-webkit-transform", "scaleX(-1)");
+                            $j(check).css("transform", "scaleX(-1)");
                         } else if (serviceCall.startDate > todayDate && serviceCall.startDate < tomorrowDate) {
                             // Happening later today
-                            if (lastIconType != "ongoing") {
-                                console.log("Happening later today");
-                                $j(check).css("background-position", "-84px -189px");
-                                lastIconType = "laterToday";
-                            }
+                            console.log("Happening later today");
+                            $j(check).css("background-position", "-84px -189px");
                         } else if (serviceCall.startDate > tomorrowDate) {
                             // Happening in the future
-                            if (lastIconType != "ongoing" && lastIconType != "laterToday") {
-                                console.log("Happening in the future");
-                                $j(check).css("background-position", "-42px -105px");
-                                $j(check).css("filter", "brightness(0) saturate(100%) invert(61%) sepia(65%) saturate(437%) hue-rotate(46deg) brightness(96%) contrast(92%)");
-                                lastIconType = "future";
-                            }
+                            console.log("Happening in the future");
+                            $j(check).css("background-position", "-42px -105px");
+                            $j(check).css("filter", "brightness(0) saturate(100%) invert(61%) sepia(65%) saturate(437%) hue-rotate(46deg) brightness(96%) contrast(92%)");
                         } else if (serviceCall.endDate < todayDate && serviceCall.complete) {
                             // Happened in the past and completed
                             console.log("Happened in the past and completed");
                             $j(check).css("background-position", "-21px -105px");
-                            lastIconType = "pastAndCompleted";
                         } else if (serviceCall.endDate < todayDate && !serviceCall.complete) {
                             // Happened in the past and NOT completed
                             console.log("Happened in the past and NOT completed");
                             $j(check).css("background-position", "-21px -105px");
                             $j(check).css("filter", "brightness(0) saturate(100%) invert(32%) sepia(80%) saturate(4601%) hue-rotate(345deg) brightness(84%) contrast(96%)");
-                            lastIconType = "pastAndNotCompleted";
                         } else {
                             // This should never happen, if it does, don't change the icon
                             console.warning("The service call date didn't fall into past, today, or future. No changes were made.");
