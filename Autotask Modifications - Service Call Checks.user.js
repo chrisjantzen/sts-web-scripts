@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Autotask Modifications - Service Call Checks
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-05
+// @version      2024-07-08
 // @description  This replaces the scheduled service call checkmarks in Autotask with icons showing whether they are currently happening, scheduled for the future, or if they happened in the past. Also shows if a past one was missed or completed.
 // @author       Chris Jantzen - Sea to Sky
 // @match        *.autotask.net/*
@@ -21,9 +21,9 @@
     var allowedPages = ["MyTaskAndTicket", "Summary"];
 
     // Function to observe changes in the target div's ID attribute (as this is how Autotask updates the iFrame)
-    function observeDivChangesByClass(targetDivClasses) {
+    function observeDivChangesByClass(target) {
         $j(document).ready(function() {
-            const targetDivs = $j(`.${targetDivClasses.join('.')}`);
+            const targetDivs = $j(target);
 
             targetDivs.each(function() {
                 const observer = new MutationObserver(() => {
@@ -34,6 +34,14 @@
                     // Only modify the selected pages
                     if (allowedPages.includes(page)) {
                         updateServiceCallChecks();
+
+                        // Setup watch for changes of page (e.g. 1, 2, 3)
+                        if ($j('div.Grid#MyWorkspaceTicketsByQueueGrid').length > 0) {
+                            observeDivChangesByClass('div.Grid#MyWorkspaceTicketsByQueueGrid');
+                        }
+                        if ($j('div.Grid#MyTaskAndTicketGrid').length > 0) {
+                            observeDivChangesByClass('div.Grid#MyTaskAndTicketGrid');
+                        }
                     }
                 });
 
@@ -59,7 +67,15 @@
         }
     }, false);
 
-    observeDivChangesByClass(['PrimaryContentContainer1', 'Active']);
+    observeDivChangesByClass('.PrimaryContentContainer1.Active');
+
+    // Watch for changes of page (e.g. 1, 2, 3)
+    if ($j('div.Grid#MyWorkspaceTicketsByQueueGrid').length > 0) {
+        observeDivChangesByClass('div.Grid#MyWorkspaceTicketsByQueueGrid');
+    }
+    if ($j('div.Grid#MyTaskAndTicketGrid').length > 0) {
+        observeDivChangesByClass('div.Grid#MyTaskAndTicketGrid');
+    }
 
     function updateServiceCallChecks() {
         todayDate = new Date();
